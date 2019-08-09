@@ -7,15 +7,20 @@ import {
   VrButton,
 } from 'react-360';
 
+
+
 export default class VRLMS extends React.Component {
-  state = {
-    count: 0,
+  question = {
+    query: 'Esta es una pregunta?',
+    answer: '',
   };
 
   // This method increments our count, triggering a re-render
-_incrementCount = () => {
-  this.setState({count: this.state.count + 1});
-};
+  changeStyle(option){
+    console.log(option);
+    this.question.answer=option;
+    this.setState(this.question);
+  }
 
 // Once the component mounts, run the increment method every second
 componentDidMount() {
@@ -27,13 +32,30 @@ componentDidMount() {
       <View style={styles.panel}>
         <View style={styles.greetingBox}>
           <Text style={styles.greeting}>
-            {`Welcome LMS VR Powered By 3GOVideo: ${this.state.count}`}
+            {`Pregunta : ${this.question.query}`}
+          </Text>
+          <Text style={styles.greeting}>
+            {`Respuesta : ${this.question.answer}`}
           </Text>
           <VrButton
-            onClick={this._incrementCount}
+            onClick={this.changeStyle.bind(this,'A')}
+            style={styles.greetingBox} value={'A'}>
+            <Text style={styles.greeting}>
+              A
+            </Text>
+           </VrButton>
+           <VrButton
+            onClick={this.changeStyle.bind(this,'B')}
             style={styles.greetingBox}>
             <Text style={styles.greeting}>
-              {`Count: ${this.state.count}`}
+             B
+            </Text>
+           </VrButton>
+           <VrButton
+            onClick={this.changeStyle.bind(this,'C')}
+            style={styles.greetingBox}>
+            <Text style={styles.greeting}>
+              C
             </Text>
            </VrButton>
         </View>

@@ -5,29 +5,79 @@ import {
   Text,
   View,
   VrButton,
+  Environment
 } from 'react-360';
 
 
 
-export default class VRLMS extends React.Component {
-  question = {
-    query: 'Esta es una pregunta?',
-    answer: '',
-  };
 
+export default class VRLMS extends React.Component {
+  index = 0;
+  options=['A','B','C'];
+  question={
+      query: '',
+      answer: '',
+      options: [],
+      imageUrl: ''
+  }
+  questions = [
+    {
+      query: 'Cuanto es 2 + 1 ?',
+      answer: 'C',
+      options: [1,4,3],
+      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1556489289/t6oqvwifulkeuy8gkujs.jpg'
+    },
+    {
+      query: 'Cuanto es 1 + 1 ?',
+      answer: 'B',
+      options: [1,2,0],
+      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1548269247/h4b99yn1mmiftba2agdh.jpg'
+    },
+    {
+      query: 'Cuanto es 1 + 0 ?',
+      answer: 'A',
+      options: [1,2,0],
+      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1551059795/xv70lvzxxqojxnkllzda.jpg'
+    }
+  ];
+
+  changeBackGround(image){
+    Environment.setBackgroundImage(
+      {uri:image},
+      {format: '2D'}, /* one of the formats mentioned above */
+    );
+  }
   // This method increments our count, triggering a re-render
-  changeStyle(option){
-    console.log(option);
-    this.question.answer=option;
+  changeQuestion(answer){
+
+    if(this.index < this.questions.length){
+      if(this.questions[this.index].answer==answer){
+        this.index+=1;
+      }
+    }
+    if(this.index >= this.questions.length){
+      this.index=0;
+    
+    }
+    console.log(this.index);
+    this.question=this.questions[this.index];
     this.setState(this.question);
+    this.changeBackGround(this.question.imageUrl);
+    
+    
+  
   }
 
 // Once the component mounts, run the increment method every second
 componentDidMount() {
-  //setInterval(this._incrementCount, 1000);
+  this.index=0;
+  this.question=this.questions[this.index];
+  this.setState(this.question);
+  this.changeBackGround(this.question.imageUrl);
 }
 
   render() {
+    var i=0;
     return (
       <View style={styles.panel}>
         <View style={styles.greetingBox}>
@@ -37,27 +87,35 @@ componentDidMount() {
           <Text style={styles.greeting}>
             {`Respuesta : ${this.question.answer}`}
           </Text>
-          <VrButton
-            onClick={this.changeStyle.bind(this,'A')}
+          {
+             
+             this.question.options.map((option) => {
+               var index=i;
+               i++;
+               return <VrButton onClick={this.changeQuestion.bind(this,this.options[index])} key={option.uniqueId} style={styles.greetingBox} value={this.options[index]}><Text style={styles.greeting}>{this.options[index]}.{option}</Text></VrButton>
+             })
+          }
+          {/*<VrButton
+            onClick={this.changeQuestion.bind(this,'A')}
             style={styles.greetingBox} value={'A'}>
             <Text style={styles.greeting}>
               A
             </Text>
            </VrButton>
            <VrButton
-            onClick={this.changeStyle.bind(this,'B')}
+            onClick={this.changeQuestion.bind(this,'B')}
             style={styles.greetingBox}>
             <Text style={styles.greeting}>
              B
             </Text>
            </VrButton>
            <VrButton
-            onClick={this.changeStyle.bind(this,'C')}
+            onClick={this.changeQuestion.bind(this,'C')}
             style={styles.greetingBox}>
             <Text style={styles.greeting}>
               C
             </Text>
-           </VrButton>
+          </VrButton>*/}
         </View>
       </View>
     );

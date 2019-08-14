@@ -25,26 +25,29 @@ export default class VRLMS extends React.Component {
       query: 'Cuanto es 2 + 1 ?',
       answer: 'C',
       options: [1,4,3],
-      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1556489289/t6oqvwifulkeuy8gkujs.jpg'
+      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1565747484/3D-6K.jpg',
+      imageFormat: '3DBT'
     },
     {
       query: 'Cuanto es 1 + 1 ?',
       answer: 'B',
       options: [1,2,0],
-      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1548269247/h4b99yn1mmiftba2agdh.jpg'
+      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1548269247/h4b99yn1mmiftba2agdh.jpg',
+      imageFormat: '2D'
     },
     {
       query: 'Cuanto es 1 + 0 ?',
       answer: 'A',
       options: [1,2,0],
-      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1551059795/xv70lvzxxqojxnkllzda.jpg'
+      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1551059795/xv70lvzxxqojxnkllzda.jpg',
+      imageFormat: '2D'
     }
   ];
 
-  changeBackGround(image){
+  changeBackGround(image,imageFormat){
     Environment.setBackgroundImage(
       {uri:image},
-      {format: '2D'}, /* one of the formats mentioned above */
+      {format: imageFormat}, /* one of the formats mentioned above */
     );
   }
   // This method increments our count, triggering a re-render
@@ -62,7 +65,7 @@ export default class VRLMS extends React.Component {
     console.log(this.index);
     this.question=this.questions[this.index];
     this.setState(this.question);
-    this.changeBackGround(this.question.imageUrl);
+    this.changeBackGround(this.question.imageUrl, this.question.imageFormat);
     
     
   
@@ -73,7 +76,7 @@ componentDidMount() {
   this.index=0;
   this.question=this.questions[this.index];
   this.setState(this.question);
-  this.changeBackGround(this.question.imageUrl);
+  this.changeBackGround(this.question.imageUrl, this.question.imageFormat);
 }
 
   render() {

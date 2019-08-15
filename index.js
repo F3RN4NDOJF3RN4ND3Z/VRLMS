@@ -26,8 +26,8 @@ export default class VRLMS extends React.Component {
       query: 'Cuanto es 2 + 1 ?',
       answer: 'C',
       options: [1,4,3],
-      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1556489289/t6oqvwifulkeuy8gkujs.jpg',
-      imageFormat: '2D'
+      imageUrl: 'https://res.cloudinary.com/helnzir6y/image/upload/v1565747484/3D-6K.jpg',
+      imageFormat: '3DBT'
     },
     {
       query: 'Cuanto es 1 + 1 ?',
@@ -88,8 +88,8 @@ export default class VRLMS extends React.Component {
       });
       Environment.setBackgroundVideo('myplayer');
     }
-    
   }
+
   // This method increments our count, triggering a re-render
   changeQuestion(answer){
 
@@ -142,29 +142,9 @@ componentDidMount() {
                  return <VrButton onClick={this.changeQuestion.bind(this,this.options[index])} key={option.uniqueId} style={styles.greetingBox} value={this.options[index]}><Text style={styles.greeting}>{this.options[index]}.{option}</Text></VrButton>
                })
             }
-            {/*<VrButton
-              onClick={this.changeQuestion.bind(this,'A')}
-              style={styles.greetingBox} value={'A'}>
-              <Text style={styles.greeting}>
-                A
-              </Text>
-             </VrButton>
-             <VrButton
-              onClick={this.changeQuestion.bind(this,'B')}
-              style={styles.greetingBox}>
-              <Text style={styles.greeting}>
-               B
-              </Text>
-             </VrButton>
-             <VrButton
-              onClick={this.changeQuestion.bind(this,'C')}
-              style={styles.greetingBox}>
-              <Text style={styles.greeting}>
-                C
-              </Text>
-            </VrButton>*/}
           </View>
         </View>
+        
       );
     
   }
@@ -187,6 +167,25 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 30,
+  },
+  videoplayercontrols: {
+    flex: 1,
+    flexDirection: 'row',
+    width: 1,
+    alignItems: 'stretch',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    transform: [{translate: [2, 2, -5]}],
+    borderColor: '#639dda',
+    borderWidth: 2,
+    backgroundColor: '#000000',
+    width: 600,
+  },
+  videoplayerbutton:{
+    backgroundColor: '#c0c0d0',
+    borderRadius: 5,
+    width: 40,
+    height: 44,
   },
 });
 

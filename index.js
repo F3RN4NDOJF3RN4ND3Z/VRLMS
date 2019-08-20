@@ -11,10 +11,70 @@ import {
   Video,
   VideoControl,
   MediaPlayerState,
+  Surface
 } from 'react-360';
 
 import VideoModule from 'VideoModule';
 const VIDEO_PLAYER = 'myplayer';
+
+class VideoSliderBar extends React.Component {
+  props: {
+    fillColor: string,
+    style: any,
+    progress: number,
+    onClickProgress?: ?(position: number) => any,
+    duration: number,
+  };
+  _gazedPosition: number = -1;
+
+  _onExit = () => {
+    this._gazedPosition = -1;
+  };
+
+  _onClick = () => {
+    
+    this._gazedPosition >= 0 &&
+      this.props.onClickProgress &&
+      this.props.onClickProgress(this._gazedPosition);
+      console.log(this._gazedPosition);
+      this.props.progress=this._gazedPosition;
+      VideoModule.seek(VIDEO_PLAYER,this._gazedPosition* this.props.duration),
+      VideoModule.resume(VIDEO_PLAYER);
+  };
+
+  _onFillMove = (e: Object) => {
+    this._gazedPosition = this.props.progress * e.nativeEvent.offset[0];
+  };
+
+  _onEmptyMove = (e: Object) => {
+    this._gazedPosition = this.props.progress + (1 - this.props.progress) * e.nativeEvent.offset[0];
+  };
+
+  render() {
+    return (
+      <VrButton
+        style={[this.props.style, styles.barContainer]}
+        onExit={this._onExit}
+        onClick={this._onClick}>
+        <View
+          style={[
+            styles.barFill,
+            {flex: this.props.progress, backgroundColor: this.props.fillColor},
+          ]}
+          onMove={this._onFillMove}
+        />
+        <View
+          style={[styles.barEmpty, {flex: 1 - this.props.progress}]}
+          onMove={this._onEmptyMove}
+        />
+        
+      </VrButton>
+     
+    );
+  }
+
+  
+}
 
 export default class VRLMS extends React.Component {
 
@@ -26,7 +86,7 @@ export default class VRLMS extends React.Component {
   }
 
   index = 0;
-  mPlayer={isPlaying:false,time_remaining:0};
+  mPlayer={status:'none',current_time:0,duration:0,seekTo:0,time_duration:'00:00:00',time_current:'00:00:00'};
   options=['A','B','C'];
   question={
       query: '',
@@ -74,8 +134,6 @@ export default class VRLMS extends React.Component {
         {format: imageFormat}, /* one of the formats mentioned above */
       );
     }else if(video != null && videoFormat != null){
-    
-     
       VideoModule.createPlayer(VIDEO_PLAYER);
 
       VideoModule.play(VIDEO_PLAYER, {
@@ -87,28 +145,44 @@ export default class VRLMS extends React.Component {
       });
       this.mPlayer.isPlaying=true;
       player=VideoModule.getPlayer(VIDEO_PLAYER);
-      console.log(player);
-      console.log(this.state.playerState);
       player.addListener('onVideoStatusChanged', (event) => {
-        this.state.playerState.duration=event.duration;
-        this.state.playerState.currentTime=event.position;
-        this.setState(this.playerState);
-        console.log(this.state.playerState.currentTime);
-        console.log(event.position);
+        this.mPlayer.duration= event.duration;
+        this.mPlayer.current_time=event.position/event.duration;
+        this.mPlayer.time_duration= (new Date(this.mPlayer.duration * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
+        this.mPlayer.time_current=(new Date(event.position * 1000)).toUTCString().match(/(\d\d:\d\d:\d\d)/)[0];
         if (event.status === 'finished') {
           console.log('Video has finished');
-          this.mPlayer.isPlaying=false;
+          this.mPlayer.status='finished';
+          VideoModule.destroyPlayer(VIDEO_PLAYER);
           this.setState(this.mPlayer);
         }
+        if (event.isBuffering){
+          this.mPlayer.status='buffering';
+          console.log('Video is buffering');
+        }
         if (event.status === 'playing') {
-
+          this.mPlayer.status='playing';
+          this.setState(this.mPlayer);
           console.log('Video is playing');
+        }
+        if (event.status === 'paused'){
+          console.log('Video is paused');
+          this.mPlayer.status='paused';
+          this.setState(this.mPlayer);
         }
       });
       Environment.setBackgroundVideo('myplayer');
     }
   }
-
+  playPause(status){
+    console.log(status);
+    if(status=='playing'){
+      VideoModule.pause(VIDEO_PLAYER);
+    }else{
+      VideoModule.resume(VIDEO_PLAYER);
+    }
+    
+  }
   // This method increments our count, triggering a re-render
   changeQuestion(answer){
 
@@ -119,7 +193,7 @@ export default class VRLMS extends React.Component {
     }
     if(this.index >= this.questions.length){
       this.index=0;
-    
+      this.mPlayer.status='none';
     }
     console.log(this.index);
     this.question=this.questions[this.index];
@@ -140,22 +214,27 @@ componentDidMount() {
 
   render() {
     var i=0;
-      if(this.mPlayer.isPlaying==true){
+      if(this.question.videoUrl != null && this.mPlayer.status!='finished'){
         return (
 
      
           <View style={styles.videoplayercontrols}>
-            <Video
- style={{height: 2.25, width: 4}}
- source={{uri: this.question.videoUrl}}
- playerState={this.state.playerState} />
-        <VideoControl
-          style={{
-            height: 40,
-            width: 1000,
-           
-          }}
-          playerState={this.state.playerState}/>
+
+          {/*<VideoControl
+            style={{
+              height: 40,
+              width: 900,
+            
+            }}
+          playerState={this.state.playerState}/>*/}
+            <VrButton onClick={this.playPause.bind(this,this.mPlayer.status)}>
+              <Image source={this.mPlayer.status==='playing' ? asset('pause.png'):asset('play.png')}  style={styles.videoplayerbutton}></Image>
+            
+            
+            </VrButton>
+            <VideoSliderBar style={{width:600,height:40}} fillColor='#639dda' progress={this.mPlayer.current_time} duration={this.mPlayer.duration}></VideoSliderBar>
+            <Text>{this.mPlayer.time_current}-{this.mPlayer.time_duration}</Text>
+            
           </View>
         );
       }
@@ -211,24 +290,69 @@ const styles = StyleSheet.create({
   videoplayercontrols: {
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'stretch',
     alignItems: 'center',
-    transform: [{translate: [0,-550,-5]}],
+    transform: [{translate: [0,-800,0], rotation: [0,0,0]}],
     borderColor: '#639dda',
     borderWidth: 2,
-    backgroundColor: '#000000',
+    backgroundColor: 'rgba(255, 255, 255, 0.6)',
     width: 1000,
     height:50,
-    borderRadius: 5
+    borderRadius: 5,
+    paddingHorizontal: '10%',
   },
   videoplayerbutton:{
-    backgroundColor: '#c0c0d0',
-    borderRadius: 5,
-    width: 40,
-    height: 40,
-    borderColor: '#639dda',
-    borderWidth: 2,
+    
+    width: 20,
+    height: 20,
   },
+  
+  text: {
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    paddingHorizontal: '2%',
+  },
+  timerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: '2%',
+  },
+  timerText: {
+    paddingLeft: '2%',
+    paddingRight: 0,
+  },
+  progressBar: {
+    flex: 1,
+  },
+  barContainer: {
+    paddingLeft: '2%',
+    paddingRight: '2%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  barFill: {
+    height: '30%',
+  },
+  barEmpty: {
+    height: '30%',
+    backgroundColor: '#333',
+  },
+  volumeContainer: {
+    flex: 0.3,
+    paddingHorizontal: '2%',
+    backgroundColor: '#222',
+  },
+  volumeBar: {
+    flex: 1,
+  },
+  loader: {
+  
+    borderRadius: 50,
+    width: 120,
+    height: 120,
+  }
 });
 
 AppRegistry.registerComponent('VRLMS', () => VRLMS);

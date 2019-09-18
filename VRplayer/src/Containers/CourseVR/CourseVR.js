@@ -1,5 +1,5 @@
 import React from 'react';
-import {asset, Environment, Image, MediaPlayerState, StyleSheet, Text, View, VrButton} from "react-360";
+import {asset, Environment, Image, MediaPlayerState, StyleSheet, Text, View, VrButton, NativeModules} from "react-360";
 import VideoModule from "react-360/Libraries/VRModules/VideoModule";
 
 
@@ -222,12 +222,16 @@ export default class CourseVR extends React.Component {
         this.index=0;
         this.question=this.questions[this.index];
         this.setState(this.question);
+        const search = NativeModules.Location.search;
+        console.log(NativeModules);
+        const params = new URLSearchParams(search);
+        const courseId = params.get('courseId');
+        console.log('courseId',courseId);
         this.changeBackGround(this.question.imageUrl,this.question.imageFormat,this.question.videoUrl,this.question.videoFormat);
     }
 
     render() {
         const { mPlayer , question , changeQuestion,playPause, options} = this;
-        console.log("entro");
         let i=0;
         if(question.videoUrl != null && mPlayer.status!='finished'){
             return (

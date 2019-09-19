@@ -1,80 +1,34 @@
 import React from 'react';
+import { MemoryRouter as Router, Redirect, Route, Switch } from 'react-router';
 import {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  View,
-  VrButton,
-  Environment,
-  Image,
-  asset,
-  Video,
-  VideoControl,
-  MediaPlayerState,
-  Surface
+    AppRegistry, NativeModules,
+    View,
+    VrButton,
+
 } from 'react-360';
 
-import VideoModule from 'VideoModule';
+
 import CourseVR from "./src/Containers/CourseVR/CourseVR";
-const VIDEO_PLAYER = 'myplayer';
+import Test from "./src/Containers/Test/Test";
 
-class VideoSliderBar extends React.Component {
-  props: {
-    fillColor: string,
-    style: any,
-    progress: number,
-    onClickProgress?: ?(position: number) => any,
-    duration: number,
-  };
-  _gazedPosition: number = -1;
 
-  _onExit = () => {
-    this._gazedPosition = -1;
-  };
+class App extends React.Component {
 
-  _onClick = () => {
-
-    this._gazedPosition >= 0 &&
-      this.props.onClickProgress &&
-      this.props.onClickProgress(this._gazedPosition);
-      console.log(this._gazedPosition);
-      this.props.progress=this._gazedPosition;
-      VideoModule.seek(VIDEO_PLAYER,this._gazedPosition* this.props.duration),
-      VideoModule.resume(VIDEO_PLAYER);
-  };
-
-  _onFillMove = (e: Object) => {
-    this._gazedPosition = this.props.progress * e.nativeEvent.offset[0];
-  };
-
-  _onEmptyMove = (e: Object) => {
-    this._gazedPosition = this.props.progress + (1 - this.props.progress) * e.nativeEvent.offset[0];
-  };
-
-  render() {
+    render() {
     return (
-      <VrButton
-        style={[this.props.style, styles.barContainer]}
-        onExit={this._onExit}
-        onClick={this._onClick}>
-        <View
-          style={[
-            styles.barFill,
-            {flex: this.props.progress, backgroundColor: this.props.fillColor},
-          ]}
-          onMove={this._onFillMove}
-        />
-        <View
-          style={[styles.barEmpty, {flex: 1 - this.props.progress}]}
-          onMove={this._onEmptyMove}
-        />
-
-      </VrButton>
-
+        <Router>
+            <View>
+                <Route exact path='/' component={CourseVR}/>
+                <Route exact path='/questions' component={CourseVR}/>
+                <Route exact path='/click' component={Test}/>
+            </View>
+        </Router>
     );
   }
 
 
 }
 
-AppRegistry.registerComponent('VRLMS', () => CourseVR);
+AppRegistry.registerComponent('VRLMS', () => App);
+AppRegistry.registerComponent('App1', () => CourseVR);
+AppRegistry.registerComponent('hello_vr', () => Test);

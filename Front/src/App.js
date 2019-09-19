@@ -1,11 +1,18 @@
 import React from 'react';
-import logo from './logo.svg';
+import { Router, Route } from 'react-router-dom';
+import { createBrowserHistory } from "history"
+
 import './App.css';
+import routerList from "./Share/Router/Router";
+
+const history = createBrowserHistory()
 
 function App() {
   return (
     <div className="App">
-      <iframe src='http://localhost:8081/index.html?courseId=123' />
+      <Router history={history}>
+          {routerList.map( route => (<Route {...route}/>))}
+      </Router>
     </div>
   );
 }

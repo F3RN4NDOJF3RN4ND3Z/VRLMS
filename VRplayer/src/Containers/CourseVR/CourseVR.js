@@ -225,8 +225,8 @@ export default class CourseVR extends React.Component {
         const search = NativeModules.Location.search;
         console.log(NativeModules);
         const params = new URLSearchParams(search);
-        const courseId = params.get('courseId');
-        console.log('courseId',courseId);
+        const type = params.get('type');
+        this.props.history.push('./'+ type)
         this.changeBackGround(this.question.imageUrl,this.question.imageFormat,this.question.videoUrl,this.question.videoFormat);
     }
 

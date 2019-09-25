@@ -1,5 +1,6 @@
 import React,{AppRegistry} from 'react';
 import firebaseapp from '../../firebaseConfig';
+import {connect} from '../../Store';
 import {
   Text,
   View,
@@ -17,42 +18,32 @@ import Entity from 'Entity';
 const AnimatedEntity = Animated.createAnimatedComponent(Entity);
 
 
-/*const config = {
-  apiKey: "AIzaSyBpKrO8P5ykdOk6dI_jT6xPaKIIiF2dtPo",
-  authDomain: "govrlms.firebaseapp.com",
-  databaseURL: "https://govrlms.firebaseio.com",
-  projectId: "govrlms",
-  storageBucket: "govrlms.appspot.com",
-  messagingSenderId: "892188446862",
-  appId: "1:892188446862:web:549003380652f814"
-};
-firebase.initializeApp(config);*/
 
 
-export default class InteractiveObject extends React.Component{
 
-    props: {
-      modelUrl:String,
-      canRotate:Boolean,
-      modelPath:String,
-    };
+class InteractiveObject extends React.Component{
+   
     constructor(props){
       super(props);
       this.state = {
-        yRotation: 0, 
+        modelLoaded: false,
+        modelUrl:'',
+        yRotation: 0,
+        modelPath:''
       };
       this.lastUpdate = Date.now();
       this.rotate = this.rotate.bind(this);
     }
-    
+    changeModelUrl(url){
+      this.setState({modelLoaded:true,modelUrl:url});
+      console.log(this.state);
+    }
     loadModelUrl(){
-      console.log(this.props.modelPath);
-      var modelRef=firebaseapp.storage().ref(this.props.modelPath);
       
-      modelRef.getDownloadURL().then(function(url) {
-        console.log(url);
-        this.props.modelUrl=url;
-      }).catch(function(error) {
+      this.setState({modelPath:this.props.interactive.modelPath});
+      var modelRef=firebaseapp.storage().ref(this.props.interactive.modelPath);
+      
+      modelRef.getDownloadURL().then((url)=>this.changeModelUrl(url)).catch(function(error) {
       
         switch (error.code) {
           case 'storage/object-not-found':
@@ -77,8 +68,18 @@ export default class InteractiveObject extends React.Component{
             break;
         }
       });
-      console.log(this.props.modelUrl);
+
     }
+    componentWillReceiveProps(nextProps) {
+      if (nextProps.interactive !== this.props.interactive) {
+        this.props=nextProps;
+        console.log(this.props.interactive.modelPath);
+
+        this.loadModelUrl();
+        this.rotate();
+      }
+    }
+    
     rotate() { //custom function, called when it is time to rotate
           const now = Date.now();
           const delta = now - this.lastUpdate;
@@ -96,14 +97,11 @@ export default class InteractiveObject extends React.Component{
       }
 
     componentDidMount(){
-     this.loadModelUrl();
-     console.log(this.props);
-     if(this.props.canRotate){
-      this.rotate();
-     }
+ 
     }
     render(){
-      if(this.props.modelUrl == null){
+   
+      if(!this.state.modelLoaded){
         return(
         <View >
           <View style={{flex: 1, justifyContent: 'center'}}>
@@ -116,12 +114,12 @@ export default class InteractiveObject extends React.Component{
           
           <View>
             <AmbientLight
-                intensity={.5}
+                intensity={1}
               />
             <AnimatedEntity
               style={{transform: [{rotateY: this.state.yRotation}]}}
               //source={{gltf2: asset(this.props.modelUrl)}}
-              source={{gltf2: this.props.modelUrl}}
+              source={{gltf2: this.state.modelUrl}}
             />
           </View>
         );
@@ -156,3 +154,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+
+const ConnectedInteractiveObject = connect(InteractiveObject);
+
+export default ConnectedInteractiveObject;

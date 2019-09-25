@@ -7,8 +7,9 @@ import {
   Image,
   asset,
   StyleSheet,
+  MediaPlayerState,
 } from 'react-360';
-
+import VideoSliderBar from '../../Components/VideoPlayer/VideoSliderBar';
 import VideoModule from 'VideoModule';
 const VIDEO_PLAYER = 'myplayer';
 
@@ -101,9 +102,17 @@ const styles = StyleSheet.create({
 export default class InteractiveVideo extends React.Component {
     props: {
         videoUrl: string,
-        videoFormat: any
+        videoFormat: any,
+        videoPath: string
       };
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            playerState: new MediaPlayerState({autoPlay: true, muted: true}), // init with muted, autoPlay
+        };
+    }
+    mPlayer={status:'none',current_time:0,duration:0,seekTo:0,time_duration:'00:00:00',time_current:'00:00:00'};
     componentDidMount() {
         VideoModule.createPlayer(VIDEO_PLAYER);
     
@@ -158,12 +167,14 @@ export default class InteractiveVideo extends React.Component {
     }
 
     render(){
+        const {playPause} = this;
         return (
+            
             <View style={styles.videoplayercontrols}>
-                <VrButton onClick={playPause(mPlayer.status)}>
-                    <Image source={mPlayer.status==='playing' ? asset('pause.png'):asset('play.png')}  style={styles.videoplayerbutton}></Image>
+                <VrButton onClick={playPause.bind(this,this.mPlayer.status)}>
+                    <Image source={this.mPlayer.status==='playing' ? asset('pause.png'):asset('play.png')}  style={styles.videoplayerbutton}></Image>
                 </VrButton>
-                <VideoSliderBar style={{width:600,height:40}} fillColor='#639dda' progress={mPlayer.current_time} duration={mPlayer.duration}></VideoSliderBar>
+                <VideoSliderBar style={{width:600,height:40}} fillColor='#639dda' progress={this.mPlayer.current_time} duration={this.mPlayer.duration}></VideoSliderBar>
                 <Text>{this.mPlayer.time_current}-{this.mPlayer.time_duration}</Text>
             </View>
         );

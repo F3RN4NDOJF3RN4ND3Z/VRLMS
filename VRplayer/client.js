@@ -24,7 +24,7 @@ function init(bundle, parent, options = {}) {
           ),
           r360.getDefaultSurface()
         );
-        const s = r360.getDefaultSurface();
+        var s = r360.getDefaultSurface();
         s.setShape(Surface.SurfaceShape.Cylinder );
         s.resize(1000, 900);
       console.log("Interactive Video");
@@ -62,6 +62,14 @@ function init(bundle, parent, options = {}) {
       console.log("Interactive Image");
       break;
     default:
+        r360.renderToSurface(
+          r360.createRoot('VRLMS', //{ / initial props / }
+          ),
+          r360.getDefaultSurface()
+        );
+        var s = r360.getDefaultSurface();
+        s.setShape(Surface.SurfaceShape.Cylinder );
+        s.resize(1000, 900);
       break;
   }
   // Render your app content to the default cylinder surface

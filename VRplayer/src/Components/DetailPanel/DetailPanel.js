@@ -46,7 +46,7 @@ const DetailPanel = props =>{
         return(
             <View style={styles.wrapper}>
                 <View style={{flex: 1, justifyContent: 'center'}}>
-                <Text style={{textAlign: 'center'}}>Select a Model</Text>
+                <Text style={{textAlign: 'center'}}>Select an option from the left panel</Text>
                 </View>
             </View>
         );

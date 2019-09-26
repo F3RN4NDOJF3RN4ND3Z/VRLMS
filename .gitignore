@@ -7,3 +7,4 @@ build/
 *.mp4
 .env*
 .idea/
+*.gltf

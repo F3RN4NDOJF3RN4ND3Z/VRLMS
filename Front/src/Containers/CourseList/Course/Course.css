@@ -3,6 +3,27 @@
 }
 
 iframe {
-    height: 40%;
-    width: 40%;
+    height: 40vh;
+    width: 100%;
+
+}
+iframe.expanded {
+    height: 100vh;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+button.MuiButton-root{
+    margin: 8px;
+}
+button.MuiButton-root.expanded{
+    margin: 8px;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 2;
+
 }

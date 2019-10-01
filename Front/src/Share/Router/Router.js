@@ -1,5 +1,8 @@
 import React from 'react';
 import Course from "../../Containers/CourseList/Course/Course";
+import Login from  "../../Containers/Login/Login";
+import Home from  "../../Containers/Home/Home";
+import CourseList from  "../../Containers/CourseList/CourseList/CourseList";
 
 
 const routerList = [
@@ -10,11 +13,26 @@ const routerList = [
         component: Course
 
     },
+
     {
-        key: 2,
-        path: "/:type",
+        key: 3,
+        path: "/login",
         exact: true,
-        component: Course
+        component: Login
+
+    },
+    {
+        key: 4,
+        path: "/home",
+        exact: true,
+        component: Home
+
+    },
+    {
+        key: 5,
+        path: "/courses",
+        exact: true,
+        component: CourseList
 
     }
 ]

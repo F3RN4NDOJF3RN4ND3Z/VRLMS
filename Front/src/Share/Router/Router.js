@@ -34,7 +34,14 @@ const routerList = [
         exact: true,
         component: CourseList
 
-    }
+    },
+    {
+        key: 6,
+        path: "/",
+        exact: true,
+        component: Home
+
+    },
 ]
 
 

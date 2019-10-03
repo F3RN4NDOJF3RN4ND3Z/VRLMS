@@ -1,5 +1,8 @@
 import React,{Component} from 'react';
 import MediaCard from '../../../components/MediaCard/MediaCard';
+import { Container } from '@material-ui/core';
+
+import './CourseList.css';
 
 export default class CourseList extends React.Component{
 
@@ -9,10 +12,17 @@ export default class CourseList extends React.Component{
 
     render(){
         return(
-            <div>
+            <Container>
                 <h1>Course List</h1>
-                <MediaCard></MediaCard>
-            </div>
+                <div className="cards">
+                    <MediaCard></MediaCard>
+                    <MediaCard></MediaCard>
+                    <MediaCard></MediaCard>
+                    <MediaCard></MediaCard>
+                    <MediaCard></MediaCard>
+                </div>
+      
+            </Container>
         );
     }
 }

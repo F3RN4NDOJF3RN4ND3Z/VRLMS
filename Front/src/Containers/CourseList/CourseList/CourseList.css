@@ -1,0 +1,10 @@
+.cards {
+    display: flex;
+    overflow-x: auto;
+    width: auto;
+}
+
+
+.cards::-webkit-scrollbar {
+    display: none;
+}

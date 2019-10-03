@@ -1,0 +1,30 @@
+{
+  "name": "vrlms",
+  "version": "1.0.0",
+  "description": "VR Learnning Management System",
+  "dependencies": {
+    "react-scripts": "3.1.1"
+  },
+  "scripts": {
+    "startVr": "cd VRplayer && npm start",
+    "startFront": "cd Front && npm run start",
+    "start": "concurrently \"npm run startVr\" \"npm run startFront\"",
+    "install": "npm install && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/F3RN4NDOJF3RN4ND3Z/VRLMS.git"
+  },
+  "keywords": [
+    "VR"
+  ],
+  "author": "Fernando Javier Fernandez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/F3RN4NDOJF3RN4ND3Z/VRLMS/issues"
+  },
+  "homepage": "https://github.com/F3RN4NDOJF3RN4ND3Z/VRLMS#readme",
+  "devDependencies": {
+    "concurrently": "^4.1.2"
+  }
+}

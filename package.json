@@ -8,7 +8,9 @@
   "scripts": {
     "startVr": "cd VRplayer && npm install && npm start",
     "startFront": "cd Front && npm install && npm run start",
-    "start": "concurrently \"npm run startVr\" \"npm run startFront\"",
+    //uncomment this line for windows"
+    //"start": "concurrently \"npm run startVr\" \"npm run startFront\"",
+    "start":"(npm run startVr) & (npm run startFront)",
     "heroku-postbuild": "npm install"
   },
   "repository": {

@@ -6,8 +6,8 @@
     "react-scripts": "3.1.1"
   },
   "scripts": {
-    "startVr": "cd VRplayer && npm start",
-    "startFront": "cd Front && npm run start",
+    "startVr": "cd VRplayer && npm install && npm start",
+    "startFront": "cd Front && npm install && npm run start",
     "start": "concurrently \"npm run startVr\" \"npm run startFront\"",
     "install": "npm install && npm start"
   },

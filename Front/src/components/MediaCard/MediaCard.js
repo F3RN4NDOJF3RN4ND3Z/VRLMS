@@ -19,7 +19,7 @@ export default class MediaCard extends Component {
             <div className="container">
                 <h4><b>Explore The Universe</b></h4>
                 <p>A tutorial Course Showing all the types of contents</p>
-                <Link to="/course/InteractiveOObject"><button>Explore</button></Link>
+                <Link to="/course/ExploreUniverse"><button>Explore</button></Link>
                 
             </div>
            

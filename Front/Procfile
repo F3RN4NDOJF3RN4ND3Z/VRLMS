@@ -1,1 +1,1 @@
-web: cd Front && npm install && npm start
+web: cd Front && npm start

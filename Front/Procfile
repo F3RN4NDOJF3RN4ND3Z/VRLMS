@@ -1,1 +1,1 @@
-vrlms: npm start
+vrlms: cd Front && npm start

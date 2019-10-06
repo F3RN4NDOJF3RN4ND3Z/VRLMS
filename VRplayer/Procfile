@@ -1,1 +1,1 @@
-vrplayer: npm start
+vrplayer: cd VRplayer && npm start

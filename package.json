@@ -10,7 +10,7 @@
     "startFront": "cd Front && npm install && npm run start",
     "startWin": "concurrently \"npm run startVr\" \"npm run startFront\"",
     "start":"(npm run startVr) & (npm run startFront)",
-    "heroku-postbuild": "npm install"
+    "heroku-postbuild": "npm install && ./scripts/heroku.build"
   },
   "repository": {
     "type": "git",

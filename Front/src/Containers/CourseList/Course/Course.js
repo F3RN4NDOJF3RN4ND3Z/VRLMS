@@ -15,7 +15,7 @@ import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
 
 export default function Course({match: {params: {id}}}) {
 
-    const url=window.location.protocol+'//'+window.location.hostname;
+    const url=process.env.REACT_APP_VRPLAYER_HOST;
     const [expand, setExpand] = React.useState(false),
         [selected, setSelected] = React.useState({}),
         [types] = React.useState([
@@ -45,7 +45,7 @@ export default function Course({match: {params: {id}}}) {
         getIframe = (type, expand) => (
             <React.Fragment>
                 <iframe
-                    src={url+":8081/index.html?type=" + type}
+                    src={url+"?type=" + type}
                     className={expand ? "expanded" : ""}
                     frameBorder="0"/>
                 <Button variant="contained"
